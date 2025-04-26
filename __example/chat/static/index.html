@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+<span class="status">Not connected</span>
+
+<form class="formMessage">
+    <label for="message">
+        <input type="text" placeholder="ping, pong, ..." id="message">
+    </label>
+    <button class="send">Send</button>
+</form>
+
+<script>
+    const ws = new WebSocket("/ws");
+    const statusSpan = document.querySelector('.status');
+    const formMessage = document.querySelector('.formMessage');
+    const messageInput = document.querySelector('#message');
+
+    formMessage.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const msg = messageInput.value;
+        ws.send(msg);
+    })
+
+    ws.onopen = () => {
+        statusSpan.innerHTML = "Connected"
+    }
+
+    ws.onclose = () => {
+        statusSpan.innerHTML = 'Not connected';
+    }
+
+    ws.onmessage = (msg) => {
+        console.log(msg);
+    }
+</script>
+</body>
+</html>
